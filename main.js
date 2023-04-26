@@ -1,30 +1,64 @@
-/* state */
-/* action creator function */
-/* reducer function */
-/* store */
+const { createStore, combineReducers } = require("redux");
+/* products constant */
+const GET_PRODUCTS = "GET_PRODUCTS";
+const ADD_PRODUCT = "ADD_PRODUCT";
 
-const { createStore } = require("redux");
+/* carts constant */
+const GET_CART_ITEMS = "GET_CART_ITEMS";
+const ADD_CART = "ADD_CART";
 
-const ADD_USER = "ADD_USER";
-
-const initialState = {
-  users: ["anis"],
-  count: 1,
+//products state
+const initialProducts = {
+  products: ["sugar", "salt"],
+  numberOfProducts: 2,
 };
 
-const addUser = (user) => {
+//products state
+const initialCarts = {
+  cart: ["sugar"],
+  numberOfProducts: 1,
+};
+
+//products action
+const getProducts = () => {
   return {
-    type: ADD_USER,
-    payload: user,
+    type: GET_PRODUCTS,
   };
 };
 
-const counterReducer = (state = initialState, action) => {
+const addProduct = (product) => {
+  return {
+    type: ADD_PRODUCT,
+    payload: product,
+  };
+};
+
+//cart action
+const getCart = () => {
+  return {
+    type: GET_CART_ITEMS,
+  };
+};
+
+const addCart = (value) => {
+  return {
+    type: ADD_CART,
+    payload: value,
+  };
+};
+
+//products reducer
+const productReducer = (state = initialProducts, action) => {
   switch (action.type) {
-    case ADD_USER:
+    case GET_PRODUCTS:
       return {
-        users: [...state.users, action.payload],
-        count: state.count + 1,
+        ...state,
+      };
+
+    case ADD_PRODUCT:
+      return {
+        products: [...state.products, action.payload],
+        numberOfProducts: state.numberOfProducts + 1,
       };
 
     default:
@@ -32,11 +66,35 @@ const counterReducer = (state = initialState, action) => {
   }
 };
 
-const store = createStore(counterReducer);
+//cart reducer
+const cartReducer = (state = initialCarts, action) => {
+  switch (action.type) {
+    case GET_CART_ITEMS:
+      return {
+        ...state,
+      };
 
+    case ADD_CART:
+      return {
+        cart: [...state.cart, action.payload],
+        numberOfProducts: state.numberOfProducts + 1,
+      };
+
+    default:
+      return state;
+  }
+};
+
+const rootReducer = combineReducers({
+  productR: productReducer,
+  cartR: cartReducer,
+});
+
+const store = createStore(rootReducer);
 store.subscribe(() => {
   console.log(store.getState());
 });
 
-store.dispatch(addUser("usuf"));
-store.dispatch(addUser("jony"));
+store.dispatch(addProduct("oil"));
+
+store.dispatch(addCart("banana"));
