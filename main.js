@@ -1,15 +1,18 @@
+/* state ->count:0 */
+/* action creator : increment, decrement, reset */
+/* reducer function */
+/* store */
+
 const { createStore } = require("redux");
 
-/* declaring constant variables */
 const INCREMENT = "INCREMENT";
 const DECREMENT = "DECREMENT";
+const RESET = "RESET";
 
-/* state */
 const initialState = {
   count: 0,
 };
 
-/* action -> Object -> Tyep, Payload */
 const incrementCounter = () => {
   return {
     type: INCREMENT,
@@ -22,7 +25,12 @@ const decrementCounter = () => {
   };
 };
 
-/* create reducer for counter */
+const resetCounter = () => {
+  return {
+    type: RESET,
+  };
+};
+
 const counterReducer = (state = initialState, action) => {
   switch (action.type) {
     case INCREMENT:
@@ -37,20 +45,26 @@ const counterReducer = (state = initialState, action) => {
         count: state.count - 1,
       };
 
+    case RESET:
+      return {
+        ...state,
+        count: 0,
+      };
+
     default:
       return state;
   }
 };
 
-/* create store */
 const store = createStore(counterReducer);
 
 store.subscribe(() => {
   console.log(store.getState());
 });
 
-/* dispatch */
 store.dispatch(incrementCounter());
 store.dispatch(incrementCounter());
 store.dispatch(incrementCounter());
+
 store.dispatch(decrementCounter());
+store.dispatch(resetCounter());
